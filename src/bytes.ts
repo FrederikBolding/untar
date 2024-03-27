@@ -35,7 +35,8 @@ export class ByteReader {
   }
 
   readString(length: number) {
-    return new TextDecoder().decode(this.read(length));
+    const bytes = this.read(length);
+    return new TextDecoder().decode(bytes.subarray(0, bytes.indexOf(0)));
   }
 
   readOct(length: number) {

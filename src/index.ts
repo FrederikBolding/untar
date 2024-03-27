@@ -79,7 +79,7 @@ async function main() {
   );
 
   const fileStream2 = Readable.toWeb(getFileStream());
-  const bufferSize = await getFileSize() * 2;
+  const bufferSize = (await getFileSize()) * 2;
   now = Date.now();
   const files2 = await customUntar(fileStream2, bufferSize);
   console.log(
@@ -90,6 +90,31 @@ async function main() {
     files2.size,
     "files"
   );
+
+  const files1Keys = Array.from(files1.keys());
+  const files1Values = Array.from(files1.values());
+  const files2Keys = Array.from(files2.keys());
+  const files2Values = Array.from(files2.values());
+  for (let i = 0; i < files1Values.length; i++) {
+    const key1 = files1Keys[i];
+    const key2 = files2Keys[i];
+    const value1 = files1Values[i]!;
+    const value2 = files2Values[i]!;
+
+    if (key1 !== key2) {
+      throw new Error(`Key mismatch ${key1} !== ${key2}`);
+    }
+
+    if (value1.length !== value2.length) {
+      throw new Error(`Value mismatch for ${key1} and ${key2}`);
+    }
+
+    for (let j = 0; j < value1.length; j++) {
+      if (value1[j] !== value2[j]) {
+        throw new Error(`Value mismatch for ${key1} and ${key2}`);
+      }
+    }
+  }
 }
 
 main().catch(console.error);
