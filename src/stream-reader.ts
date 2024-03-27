@@ -1,6 +1,6 @@
 import { ReadableStream } from "stream/web";
 
-const ALLOCATION_SIZE = 1_000_000; // 1 mb at a time
+const ALLOCATION_SIZE = 10_000_000; // 10 mb at a time
 
 export class StreamReader {
   #reader: ReadableStreamDefaultReader<Uint8Array>;
@@ -64,7 +64,9 @@ export class StreamReader {
       throw new Error("Read out of bounds");
     }
 
-    await this.#actualRead();
+    while (this.#writePointer < end) {
+      await this.#actualRead();
+    }
 
     return this.read(n);
   }

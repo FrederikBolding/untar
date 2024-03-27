@@ -79,7 +79,7 @@ async function main() {
   );
 
   const fileStream2 = Readable.toWeb(getFileStream());
-  const bufferSize = await getFileSize() * 3;
+  const bufferSize = await getFileSize() * 2;
   now = Date.now();
   const files2 = await customUntar(fileStream2, bufferSize);
   console.log(
